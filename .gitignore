@@ -173,6 +173,7 @@ $RECYCLE.BIN/
 
 .env
 application.yml
+application-local.yml
 ### Gradle ###
 .gradle
 /build/
@@ -181,4 +182,5 @@ application.yml
 !**/src/test/**/build/
 target/
 
+/.idea/*
 # End of https://www.toptal.com/developers/gitignore/api/windows,java,intellij,redis

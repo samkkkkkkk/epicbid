@@ -31,4 +31,17 @@ public class UserDto {
             );
         }
     }
+
+    public record LoginRequest(
+            @NotBlank(message = "이메을 입력해주세요.")
+            @Email
+            String email,
+
+            @NotBlank(message = "비밀번호를 입력해주세요.")
+            String password
+    ){}
+
+    public record LoginResult(
+            String accessToken
+    ){}
 }

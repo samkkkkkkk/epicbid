@@ -21,6 +21,13 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<UserDto.LoginResult> login(@Valid @RequestBody UserDto.LoginRequest request) {
+        UserDto.LoginResult result = userService.login(request);
+        return ResponseEntity.ok().body(result);
+    }
+
+
     // 내 정보 조회
     @GetMapping("/{userId}")
     public ResponseEntity<UserDto.Response> getUserInfo(@PathVariable Long userId) {
