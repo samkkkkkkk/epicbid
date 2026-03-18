@@ -2,10 +2,12 @@ package com.example.epicbid.domain.user.controller;
 
 import com.example.epicbid.domain.user.dto.UserDto;
 import com.example.epicbid.domain.user.service.UserService;
+import com.example.epicbid.global.security.CustomUserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -29,9 +31,13 @@ public class UserController {
 
 
     // 내 정보 조회
-    @GetMapping("/{userId}")
-    public ResponseEntity<UserDto.Response> getUserInfo(@PathVariable Long userId) {
-        UserDto.Response response = userService.getUserInfo(userId);
+    @GetMapping("/me")
+    public ResponseEntity<UserDto.Response> getUserInfo(
+            @AuthenticationPrincipal CustomUserDetails userDetails) {
+
+        UserDto.Response response = userService.getUserInfo(userDetails.userId());
         return ResponseEntity.ok(response);
     }
+
+
 }
