@@ -18,7 +18,10 @@ public enum ErrorCode {
 
 
     INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "C001", "잘못된 입력값입니다ㅏ."),
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "C002", "서버 내부 요류가 발생했습니다.");
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "C002", "서버 내부 요류가 발생했습니다."),
+
+    // Auction 관련 에러
+    INVALID_AUCTION(HttpStatus.BAD_REQUEST, "A001", "진행중인 경매가 아닙니다.");
 
     private final HttpStatus status;
     private final String code;
