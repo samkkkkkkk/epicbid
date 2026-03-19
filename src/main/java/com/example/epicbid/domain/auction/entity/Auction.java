@@ -1,8 +1,12 @@
 package com.example.epicbid.domain.auction.entity;
 
+import ch.qos.logback.core.spi.ErrorCodes;
 import com.example.epicbid.domain.product.entity.Product;
 import com.example.epicbid.domain.product.enums.AuctionStatus;
 import com.example.epicbid.domain.user.entity.User;
+import com.example.epicbid.global.exception.CustomException;
+import com.example.epicbid.global.exception.ErrorCode;
+import com.example.epicbid.global.exception.ErrorResponse;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -71,7 +75,7 @@ public class Auction {
     public void updateTopBid(BigDecimal newBidPrice, User newBidder) {
         BigDecimal targetPrice = topBidPrice != null ? topBidPrice : startPrice;
         if (newBidPrice.compareTo(targetPrice) <= 0) {
-            throw new IllegalArgumentException("현재 최고 입찰가보다 높은 금액을 제시해야 합니다.");
+            throw new CustomException(ErrorCode.AUCTION_INVALID_INPUT);
         }
 
         this.topBidPrice = newBidPrice;

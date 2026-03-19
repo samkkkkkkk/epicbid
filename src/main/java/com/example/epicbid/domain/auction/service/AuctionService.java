@@ -25,14 +25,14 @@ public class AuctionService {
 
         // 경매 및 사용자 조회
         Auction auction = auctionRepository.findById(auctionId)
-                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_INPUT_VALUE));
+                .orElseThrow(() -> new CustomException(ErrorCode.AUCTION_NOT_FOUND));
 
         User newBidder = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         // 경매 상태 검증
-        if (!auction.getStatus().name().equals("IN_PROCESS")) {
-            throw new CustomException(ErrorCode.INVALID_INPUT_VALUE);
+        if (!auction.getStatus().name().equals("IN_PROGRESS")) {
+            throw new CustomException(ErrorCode.INVALID_AUCTION);
         }
 
         // 새로운 입찰자의 포인트 차감
