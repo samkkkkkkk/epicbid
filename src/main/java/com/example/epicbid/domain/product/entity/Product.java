@@ -1,5 +1,6 @@
 package com.example.epicbid.domain.product.entity;
 
+import com.example.epicbid.domain.product.dto.ProductDto;
 import com.example.epicbid.domain.product.enums.BookCondition;
 import com.example.epicbid.domain.product.enums.SaleType;
 import com.example.epicbid.domain.user.entity.User;
@@ -54,6 +55,17 @@ public class Product {
         this.conditionGrade = conditionGrade;
         this.price = price;
         this.stock = stock;
+    }
+
+    public static Product createNormalProduct(Book book, User seller, BookCondition conditionGrade, BigDecimal price, Integer stock) {
+        return Product.builder()
+                .book(book)
+                .seller(seller)
+                .saleType(SaleType.NORMAL)
+                .conditionGrade(conditionGrade)
+                .price(price)
+                .stock(stock)
+                .build();
     }
 
 }

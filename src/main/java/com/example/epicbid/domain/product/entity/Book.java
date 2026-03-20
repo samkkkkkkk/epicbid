@@ -1,5 +1,6 @@
 package com.example.epicbid.domain.product.entity;
 
+import com.example.epicbid.domain.product.dto.ProductDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -34,4 +35,14 @@ public class Book {
         this.author = author;
         this.publisher = publisher;
     }
+
+    public static Book of(String isbn, String title, String author, String publisher) {
+        return Book.builder()
+                .isbn(isbn)
+                .title(title)
+                .author(author)
+                .publisher(publisher)
+                .build();
+    }
+
 }
