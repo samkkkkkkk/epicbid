@@ -1,5 +1,6 @@
 package com.example.epicbid.domain.user.entity;
 
+import com.example.epicbid.domain.user.emums.Role;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -33,10 +34,15 @@ public class User {
     @Column(updatable = false)
     private LocalDateTime createdAt;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role = Role.USER;
+
     @Builder
-    public User(String email, String password) {
+    public User(String email, String password, Role role) {
         this.email = email;
         this.password = password;
+        this.role = role != null ? role : Role.USER;
         this.pointBalance = BigDecimal.ZERO;
     }
 
