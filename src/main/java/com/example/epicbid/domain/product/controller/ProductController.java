@@ -6,13 +6,13 @@ import com.example.epicbid.domain.product.service.ProductService;
 import com.example.epicbid.global.security.CustomUserDetails;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/products")
@@ -28,7 +28,16 @@ public class ProductController {
             @AuthenticationPrincipal CustomUserDetails userDetails
             ) {
         Product product = productService.registerAdminProduct(request, userDetails.userId());
-        return ResponseEntity.status(HttpStatus.CREATED).body(product.getId());
+        return ResponseEntity.status(HttpStatus.CREATED).body(ProductDto.AdminRegisterResponse.from(product));
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<ProductDto.ListResponse>> getProducts(
+            @ModelAttribute ProductDto.SearchCondition condition,
+            @PageableDefault(size = 20) Pageable pageable
+    ) {
+        Page<ProductDto.ListResponse> response = productService.getProductList(condition, pageable);
+        return ResponseEntity.ok().body(response);
     }
 
 }

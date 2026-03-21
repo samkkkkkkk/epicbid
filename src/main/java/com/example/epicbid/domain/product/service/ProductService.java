@@ -3,16 +3,16 @@ package com.example.epicbid.domain.product.service;
 import com.example.epicbid.domain.product.dto.ProductDto;
 import com.example.epicbid.domain.product.entity.Book;
 import com.example.epicbid.domain.product.entity.Product;
-import com.example.epicbid.domain.product.enums.SaleType;
 import com.example.epicbid.domain.product.repository.BookRepository;
 import com.example.epicbid.domain.product.repository.ProductRepository;
 import com.example.epicbid.domain.user.entity.User;
 import com.example.epicbid.domain.user.repository.UserRepository;
 import com.example.epicbid.global.exception.CustomException;
 import com.example.epicbid.global.exception.ErrorCode;
-import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,4 +55,11 @@ public class ProductService {
                 ));
     }
 
+
+    @Transactional(readOnly = true)
+    public Page<ProductDto.ListResponse> getProductList(ProductDto.SearchCondition condition, Pageable pageable) {
+        Page<Product> products = productRepository.searchProducts(condition, pageable);
+
+        return products.map(ProductDto.ListResponse::from);
+    }
 }

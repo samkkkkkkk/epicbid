@@ -2,6 +2,7 @@ package com.example.epicbid.domain.product.dto;
 
 import com.example.epicbid.domain.product.entity.Product;
 import com.example.epicbid.domain.product.enums.BookCondition;
+import com.example.epicbid.domain.product.enums.SaleType;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -48,6 +49,36 @@ public class ProductDto {
                     product.getBook().getTitle(),
                     product.getPrice(),
                     product.getStock()
+            );
+        }
+    }
+
+    public record SearchCondition(
+            SaleType saleType,
+            BookCondition conditionGrade,
+            String keyword
+    ) {}
+
+    public record ListResponse(
+            Long productId,
+            String isbn,
+            String title,
+            String author,
+            String publisher,
+            SaleType saleType,
+            BigDecimal price, // (경매는 null일 수 있음)
+            BookCondition conditionGrade
+    ) {
+        public static ListResponse from(Product product) {
+            return new ListResponse(
+                    product.getId(),
+                    product.getBook().getIsbn(),
+                    product.getBook().getTitle(),
+                    product.getBook().getAuthor(),
+                    product.getBook().getPublisher(),
+                    product.getSaleType(),
+                    product.getPrice(),
+                    product.getConditionGrade()
             );
         }
     }
