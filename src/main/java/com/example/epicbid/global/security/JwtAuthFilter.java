@@ -35,14 +35,15 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
             Claims claims = jwtUtil.getClaims(token);
             Long userId = claims.get("userId", Long.class);
-            String email = claims.get("email", String.class);
+            String email = claims.getSubject();
+            String role = claims.get("role", String.class);
 
             // 인증된 사용자 객체 생성
             CustomUserDetails userDetails = new CustomUserDetails(userId, email);
 
             // SecurityContext에 인증 정보 저장
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                    userDetails, null, List.of(new SimpleGrantedAuthority("ROLE_USER"))
+                    userDetails, null, List.of(new SimpleGrantedAuthority("ROLE_" + role))
             );
 
             SecurityContextHolder.getContext().setAuthentication(authentication);

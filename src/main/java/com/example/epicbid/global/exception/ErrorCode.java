@@ -17,8 +17,14 @@ public enum ErrorCode {
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "S001", "유효하지 않은 토큰입니다."),
 
 
-    INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "C001", "잘못된 입력값입니다ㅏ."),
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "C002", "서버 내부 요류가 발생했습니다.");
+    INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "C001", "잘못된 입력값입니다."),
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "C002", "서버 내부 요류가 발생했습니다."),
+
+    // Auction 관련 에러
+    INVALID_AUCTION(HttpStatus.BAD_REQUEST, "A001", "진행중인 경매가 아닙니다."),
+    AUCTION_NOT_FOUND(HttpStatus.NOT_FOUND, "A002", "경매를 찾을 수 없습니다."),
+    AUCTION_INVALID_INPUT(HttpStatus.BAD_REQUEST, "A003", "현재 최고 입찰가보다 높은 금액을 제시해야 합니다.");
+
 
     private final HttpStatus status;
     private final String code;

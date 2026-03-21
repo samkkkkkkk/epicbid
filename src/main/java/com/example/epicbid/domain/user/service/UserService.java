@@ -49,7 +49,7 @@ public class UserService {
         }
 
         // 검증 성공 시 JWT 토큰 생성 및 발급
-        return new UserDto.LoginResult(jwtUtil.generateToke(user.getEmail(), user.getId()));
+        return new UserDto.LoginResult(jwtUtil.generateToke(user.getEmail(), user.getId(), String.valueOf(user.getRole())));
 
     }
 

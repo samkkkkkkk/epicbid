@@ -28,7 +28,7 @@ public class JwtUtil {
     }
 
     // 로그인 성공 시 JWT 발급
-    public String generateToke(String email, Long userId) {
+    public String generateToke(String email, Long userId, String role) {
 
         return Jwts.builder()
                 .header()
@@ -36,6 +36,7 @@ public class JwtUtil {
                 .and()
                 .subject(email)
                 .claim("userId", userId)
+                .claim("role", role)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + jwtProperties.expiration()))
                 .signWith(secretKey, Jwts.SIG.HS256)
