@@ -28,7 +28,7 @@ public class ProductController {
             @AuthenticationPrincipal CustomUserDetails userDetails
             ) {
         Product product = productService.registerAdminProduct(request, userDetails.userId());
-        return ResponseEntity.status(HttpStatus.CREATED).body(ProductDto.AdminRegisterResponse.from(product));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ProductDto.Response.from(product));
     }
 
     @GetMapping
@@ -40,4 +40,14 @@ public class ProductController {
         return ResponseEntity.ok().body(response);
     }
 
+    // 중고 상품 단건 등록 API
+    @PostMapping("/used")
+    public ResponseEntity<ProductDto.Response> registerUsedProduct(
+            @Valid @RequestBody ProductDto.UsedRegisteredRequest request,
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        ProductDto.Response response = productService.registerUsedProduct(request, userDetails.userId());
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
 }

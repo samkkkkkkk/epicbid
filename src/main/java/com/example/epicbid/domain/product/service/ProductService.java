@@ -3,6 +3,7 @@ package com.example.epicbid.domain.product.service;
 import com.example.epicbid.domain.product.dto.ProductDto;
 import com.example.epicbid.domain.product.entity.Book;
 import com.example.epicbid.domain.product.entity.Product;
+import com.example.epicbid.domain.product.enums.BookCondition;
 import com.example.epicbid.domain.product.repository.BookRepository;
 import com.example.epicbid.domain.product.repository.ProductRepository;
 import com.example.epicbid.domain.user.entity.User;
@@ -33,7 +34,7 @@ public class ProductService {
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         // 도서 정보 저장하기
-        Book book = getOrCreateBook(request);
+        Book book = getOrCreateBook(request.isbn(), request.title(), request.author(), request.publisher());
 
         // 상품 정보 저장
         Product product = Product.createNormalProduct(
@@ -48,12 +49,6 @@ public class ProductService {
         return savedProduct;
     }
 
-    private Book getOrCreateBook(ProductDto.AdminRegisterRequest request) {
-        return bookRepository.findByIsbn(request.isbn())
-                .orElseGet(() -> bookRepository.save(
-                        Book.of(request.isbn(), request.title(), request.author(), request.publisher())
-                ));
-    }
 
 
     @Transactional(readOnly = true)
@@ -62,4 +57,40 @@ public class ProductService {
 
         return products.map(ProductDto.ListResponse::from);
     }
+
+    // 일반 유저 중고 상품 등록 비즈니스 로직
+    @Transactional
+    public ProductDto.Response registerUsedProduct(ProductDto.UsedRegisteredRequest request, Long sellerId) {
+        // 중고 도서는 새 상품(NEW)으로 등록할 수 없음
+        if (request.conditionGrade() == BookCondition.NEW) {
+            throw new CustomException(ErrorCode.INVALID_CONDITION);
+        }
+
+        // 판매자 정보 조회
+        User seller = userRepository.findById(sellerId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        // 도서 카탈로그 확인 및 생성
+        Book book = getOrCreateBook(request.isbn(), request.title(), request.author(), request.publisher());
+
+        // 상품 생성 (재고 1개로 고정)
+        Product product = Product.createNormalProduct(
+                book,
+                seller,
+                request.conditionGrade(),
+                request.price(),
+                1
+        );
+
+        Product savedProduct = productRepository.save(product);
+        return ProductDto.Response.from(savedProduct);
+    }
+
+    private Book getOrCreateBook(String isbn, String title, String author, String publisher) {
+        return bookRepository.findByIsbn(isbn)
+                .orElseGet(() -> bookRepository.save(
+                        Book.of(isbn, title, author, publisher)
+                ));
+    }
+
 }
