@@ -35,20 +35,22 @@ public class ProductDto {
             Integer stock
     ){}
 
-    public record AdminRegisterResponse(
+    public record Response(
             Long productId,
             String isbn,
             String title,
             BigDecimal price,
-            Integer stock
+            Integer stock,
+            BookCondition conditionGrade
     ){
-        public static AdminRegisterResponse from(Product product) {
-            return new AdminRegisterResponse(
+        public static Response from(Product product) {
+            return new Response(
                     product.getId(),
                     product.getBook().getIsbn(),
                     product.getBook().getTitle(),
                     product.getPrice(),
-                    product.getStock()
+                    product.getStock(),
+                    product.getConditionGrade()
             );
         }
     }
@@ -79,6 +81,57 @@ public class ProductDto {
                     product.getSaleType(),
                     product.getPrice(),
                     product.getConditionGrade()
+            );
+        }
+    }
+
+    public record UsedRegisteredRequest(
+            @NotBlank(message = "ISBN은 필수입니다.")
+            String isbn,
+
+            @NotBlank(message = "책 제목은 필수입니다.")
+            String title,
+
+            @NotBlank(message = "저자는 필수입니다.")
+            String author,
+
+            @NotBlank(message = "출판사는 필수입니다.")
+            String publisher,
+
+            @NotNull(message = "도서 상태를 선택해주세요.")
+            BookCondition conditionGrade,
+
+            @NotNull(message = "판매 가격을 입력해주세요.")
+            BigDecimal price
+    ){}
+
+    // 상품 상세 페이지 응답 DTO
+    public record DetailResponse(
+            Long productId,
+            String isbn,
+            String title,
+            String author,
+            String publisher,
+            SaleType saleType,
+            BookCondition conditionGrade,
+            BigDecimal price,
+            Integer stock,
+            Long sellerId,
+            String sellerEmail
+    ) {
+        public static DetailResponse from(Product product) {
+            return new DetailResponse(
+                    product.getId(),
+                    product.getBook().getIsbn(),
+                    product.getBook().getTitle(),
+                    product.getBook().getAuthor(),
+                    product.getBook().getPublisher(),
+                    product.getSaleType(),
+                    product.getConditionGrade(),
+                    product.getPrice(),
+                    product.getStock(),
+                    product.getSeller().getId(),
+                    product.getSeller().getEmail()
             );
         }
     }

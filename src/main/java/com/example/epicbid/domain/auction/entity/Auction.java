@@ -1,12 +1,10 @@
 package com.example.epicbid.domain.auction.entity;
 
-import ch.qos.logback.core.spi.ErrorCodes;
 import com.example.epicbid.domain.product.entity.Product;
 import com.example.epicbid.domain.product.enums.AuctionStatus;
 import com.example.epicbid.domain.user.entity.User;
 import com.example.epicbid.global.exception.CustomException;
 import com.example.epicbid.global.exception.ErrorCode;
-import com.example.epicbid.global.exception.ErrorResponse;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -69,6 +67,15 @@ public class Auction {
         this.currentBuyPrice = startPrice; // 초기 즉시 구매가는 시작가와 동일
         this.endTime = endTime;
         this.status = AuctionStatus.IN_PROGRESS;
+    }
+
+    public static Auction createAuction(Product product, BigDecimal startPrice, BigDecimal minPrice, LocalDateTime endTime) {
+        return Auction.builder()
+                .product(product)
+                .startPrice(startPrice)
+                .minPrice(minPrice)
+                .endTime(endTime)
+                .build();
     }
 
     // 입찰 비즈니스 로직
