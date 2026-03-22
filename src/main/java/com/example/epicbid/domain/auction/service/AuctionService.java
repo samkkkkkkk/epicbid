@@ -3,6 +3,8 @@ package com.example.epicbid.domain.auction.service;
 import com.example.epicbid.domain.auction.dto.AuctionDto;
 import com.example.epicbid.domain.auction.entity.Auction;
 import com.example.epicbid.domain.auction.repository.AuctionRepository;
+import com.example.epicbid.domain.product.entity.Product;
+import com.example.epicbid.domain.product.service.ProductService;
 import com.example.epicbid.domain.user.entity.User;
 import com.example.epicbid.domain.user.repository.UserRepository;
 import com.example.epicbid.global.exception.CustomException;
@@ -19,6 +21,29 @@ public class AuctionService {
 
     private final AuctionRepository auctionRepository;
     private final UserRepository userRepository;
+    private final ProductService productService;
+
+    @Transactional
+    public AuctionDto.RegisterResponse registerAuction(AuctionDto.RegisterRequest request, Long sellerId) {
+
+        // 판매자 조회
+        User seller = userRepository.findById(sellerId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        // Product 도메인에 상품 생성 위임
+        Product auctionProduct = productService.createProductForAuction(
+                request.isbn(), request.title(), request.author(), request.publisher(),
+                seller, request.conditionGrade()
+        );
+
+        // Auction 데이터 저장
+        Auction auction = Auction.createAuction(auctionProduct, request.startPrice(), request.minPrice(), request.endTime());
+
+
+        Auction savedAuction = auctionRepository.save(auction);
+
+        return new AuctionDto.RegisterResponse(savedAuction.getId(), auctionProduct.getId());
+    }
 
     @Transactional
     public void bid(Long auctionId, Long userId, AuctionDto.BidRequest request) {

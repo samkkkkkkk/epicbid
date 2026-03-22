@@ -95,6 +95,21 @@ public class ProductService {
         return ProductDto.DetailResponse.from(product);
     }
 
+    // 경매 상품 데이터 생성
+    @Transactional
+    public Product createProductForAuction(
+            String isbn, String title, String author, String publisher,
+            User seller, BookCondition conditionGrade
+    ) {
+        // 도서 확인 및 생성
+        Book book = getOrCreateBook(isbn, title, author, publisher);
+
+        // 경매용 Product 새성
+        Product product = Product.createAuctionProduct(book, seller, conditionGrade);
+
+        return productRepository.save(product);
+    }
+
     // 책 등록, 조회
     private Book getOrCreateBook(String isbn, String title, String author, String publisher) {
         return bookRepository.findByIsbn(isbn)
@@ -102,5 +117,7 @@ public class ProductService {
                         Book.of(isbn, title, author, publisher)
                 ));
     }
+
+
 
 }
