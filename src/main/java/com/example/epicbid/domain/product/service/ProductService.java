@@ -86,6 +86,16 @@ public class ProductService {
         return ProductDto.Response.from(savedProduct);
     }
 
+    // 상품 상세 조회
+    @Transactional(readOnly = true)
+    public ProductDto.DetailResponse getProductDetail(Long productId) {
+        Product product = productRepository.findByIdWithBookAndSeller(productId)
+                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
+
+        return ProductDto.DetailResponse.from(product);
+    }
+
+    // 책 등록, 조회
     private Book getOrCreateBook(String isbn, String title, String author, String publisher) {
         return bookRepository.findByIsbn(isbn)
                 .orElseGet(() -> bookRepository.save(

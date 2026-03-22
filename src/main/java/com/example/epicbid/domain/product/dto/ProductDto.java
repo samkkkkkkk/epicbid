@@ -104,4 +104,35 @@ public class ProductDto {
             @NotNull(message = "판매 가격을 입력해주세요.")
             BigDecimal price
     ){}
+
+    // 상품 상세 페이지 응답 DTO
+    public record DetailResponse(
+            Long productId,
+            String isbn,
+            String title,
+            String author,
+            String publisher,
+            SaleType saleType,
+            BookCondition conditionGrade,
+            BigDecimal price,
+            Integer stock,
+            Long sellerId,
+            String sellerEmail
+    ) {
+        public static DetailResponse from(Product product) {
+            return new DetailResponse(
+                    product.getId(),
+                    product.getBook().getIsbn(),
+                    product.getBook().getTitle(),
+                    product.getBook().getAuthor(),
+                    product.getBook().getPublisher(),
+                    product.getSaleType(),
+                    product.getConditionGrade(),
+                    product.getPrice(),
+                    product.getStock(),
+                    product.getSeller().getId(),
+                    product.getSeller().getEmail()
+            );
+        }
+    }
 }

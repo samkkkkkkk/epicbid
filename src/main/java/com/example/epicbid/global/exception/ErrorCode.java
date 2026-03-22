@@ -26,7 +26,8 @@ public enum ErrorCode {
     AUCTION_INVALID_INPUT(HttpStatus.BAD_REQUEST, "A003", "현재 최고 입찰가보다 높은 금액을 제시해야 합니다."),
 
     // Product 관련 에러
-    INVALID_CONDITION(HttpStatus.BAD_REQUEST, "P001", "중고 상품은 새 상품으로 등록할 수 없습니다.");
+    INVALID_CONDITION(HttpStatus.BAD_REQUEST, "P001", "중고 상품은 새 상품으로 등록할 수 없습니다."),
+    PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "P002", "상품을 찾을 수 없습니다.");
 
     private final HttpStatus status;
     private final String code;

@@ -26,7 +26,7 @@ public class ProductController {
     public ResponseEntity<?> registerAdminProduct(
             @Valid @RequestBody ProductDto.AdminRegisterRequest request,
             @AuthenticationPrincipal CustomUserDetails userDetails
-            ) {
+    ) {
         Product product = productService.registerAdminProduct(request, userDetails.userId());
         return ResponseEntity.status(HttpStatus.CREATED).body(ProductDto.Response.from(product));
     }
@@ -49,5 +49,15 @@ public class ProductController {
         ProductDto.Response response = productService.registerUsedProduct(request, userDetails.userId());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    // 상품 상세 조회 API
+    @GetMapping("/{productId}")
+    public ResponseEntity<ProductDto.DetailResponse> getProductDetail(
+            @PathVariable Long productId
+    ) {
+        ProductDto.DetailResponse response = productService.getProductDetail(productId);
+
+        return ResponseEntity.ok(response);
     }
 }
